@@ -1,0 +1,29 @@
+{
+  "name": "dvixi/yii2-alpaca-json",
+  "description": "Generate fully functional CRUD storing system from JSON data object string",
+  "type": "yii2-extension",
+  "keywords": [
+    "yii2",
+    "alpaca",
+    "json schema",
+    "gii"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Maxim Galich",
+      "email": "galich.maxim@gmail.com",
+      "homepage": "https://github.com/athl64",
+      "role": "developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "dvixi\\alpaca\\": "src/"
+    }
+  },
+  "require": {
+    "ext-json": "*",
+    "yiisoft/yii2-jui": "*"
+  }
+}
