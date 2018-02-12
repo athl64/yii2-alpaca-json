@@ -53,3 +53,20 @@ $tabs = [];
 
 <?php \yii\widgets\ActiveForm::end(); ?>
 <br>
+<?php Yii::$app->view->registerJs("
+    $(document).on('click', '[data-alpaca_submit]', function(e) {
+        var isValid = checkFormsForValidity();
+        if (!isValid) {
+            e.preventDefault();
+            alert('" . Yii::t('app', 'Check validity of filled form!') . "');
+        }
+    });
+    var checkFormsForValidity = function() {
+        var result = true;
+        var alpacaObj = $.alpaca.fieldInstances;
+        for (var propertyName in $.alpaca.fieldInstances) {
+            result &= $.alpaca.fieldInstances[propertyName].validate();
+        };
+        return result;
+    }
+"); ?>
