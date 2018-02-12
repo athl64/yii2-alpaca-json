@@ -49,7 +49,7 @@ $tabs = [];
         'items' => $tabs,
     ]) ?>
 
-    <button type="submit" class="btn btn-primary"><?= Yii::t('app', 'Save') ?></button>
+    <button type="submit" class="btn btn-primary" data-alpaca_submit><?= Yii::t('app', 'Save') ?></button>
 
 <?php \yii\widgets\ActiveForm::end(); ?>
 <br>
