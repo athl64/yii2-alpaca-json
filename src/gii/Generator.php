@@ -13,9 +13,21 @@ use Yii;
 
 class Generator extends \yii\gii\Generator
 {
+    const DEFAULT_JSON_ATTR = 'pageSeo';
+
     public $moduleNamespace = 'dvixi\alpaca';
     public $class;
     public $jsonObjects;
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+
+        $this->addDefaultSeoBlock();
+    }
 
     /**
      * @return array
@@ -35,6 +47,23 @@ class Generator extends \yii\gii\Generator
     public function getName()
     {
         return 'JSON page generator';
+    }
+
+    /**
+     * Adds to jsonObjects seo block
+     */
+    protected function addDefaultSeoBlock()
+    {
+        $defaultSeoJsonString = '';
+        $jsonFilePath = __DIR__ . DIRECTORY_SEPARATOR . 'jsonDefaultData/page-seo.json';
+        if (file_exists($jsonFilePath)) {
+            $defaultSeoJsonString = file_get_contents($jsonFilePath);
+        }
+
+        $this->jsonObjects[] = [
+            'attribute' => self::DEFAULT_JSON_ATTR,
+            'json' => $defaultSeoJsonString,
+        ];
     }
 
     /**
@@ -87,7 +116,7 @@ class Generator extends \yii\gii\Generator
                 'jsonFieldConfigString' => $jsonFieldConfigString,
                 'jsonFieldOptionsString' => $jsonFieldOptionsString,
                 'attributes' => $attributes,
-                'moduleName' => $moduleName
+                'moduleName' => $moduleName,
             ])
         );
 
@@ -215,7 +244,9 @@ class Generator extends \yii\gii\Generator
                 }
             } else {
                 if ($parentName != 'fields' && $parentName != 'items') {
-                    $result['type'] = 'text';
+                    $result['type'] = ($key == 'type' && $item == 'boolean')
+                        ? 'checkbox'
+                        : 'text';
                 }
             }
             if (isset($result['items'])) {
