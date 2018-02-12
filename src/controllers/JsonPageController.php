@@ -40,7 +40,7 @@ abstract class JsonPageController extends Controller
             $model->save();
         }
 
-        return $this->render('@backend/modules/jsonPage/views/json-page/_form', [
+        return $this->render('@dvixi/alpaca/views/json-page/_form', [
             'model' => $model,
         ]);
     }

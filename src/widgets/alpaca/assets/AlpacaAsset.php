@@ -12,7 +12,7 @@ use yii\web\AssetBundle;
 
 class AlpacaAsset extends AssetBundle
 {
-    public $sourcePath = '@backend/modules/jsonPage/widgets/alpaca/assets';
+    public $sourcePath = '@dvixi/alpaca/widgets/alpaca/assets';
     public $css = [
         'css/alpaca.min.css',
     ];
