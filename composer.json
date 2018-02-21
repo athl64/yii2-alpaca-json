@@ -23,6 +23,7 @@
     }
   },
   "require": {
+    "evaisse/php-json-schema-generator": "^2.0",
     "ext-json": "*",
     "yiisoft/yii2-jui": "*"
   }

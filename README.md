@@ -15,4 +15,30 @@ Using [composer](http://getcomposer.org/download/).
 php composer.phar require dvixi/yii2-alpaca-json "*"
 ```
 
+1. add module to main.php config
+````
+'jsonPage' => [
+    'class' => 'dvixi\alpaca\Module',
+    'languages' => ['en'],
+    'defaultLanguage' => 'en',
+],
+````
+2. or, add languages in bootstrap.php (if storing languages in DB with ActiveRecord)
+````
+\Yii::$container->set(
+    'dvixi\alpaca\Module',
+    function ($container, $params, $config) {
+        $config['languages'] = \common\helpers\LanguageHelper::getApplicationLanguages();
+        $config['defaultLanguage'] = \common\helpers\LanguageHelper::getDefaultLanguage()->locale;
+
+        return new \dvixi\alpaca\Module('jsonPage', null, $config);
+    }
+);
+````
+3. for using with ckeditor and file management add to composer.json:
+````
+"sadovojav/yii2-ckeditor": "dev-master",
+"mihaildev/yii2-elfinder": "^1.2",
+````
+
 ##### [Docs are in progress.]

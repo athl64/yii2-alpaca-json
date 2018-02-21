@@ -12,9 +12,6 @@
 $this->title = $model->getTitle();
 $tabs = [];
 ?>
-<br>
-<br>
-<br>
 <div class="page-header">
     <h1>
         <?= $model->getTitle() ?>
