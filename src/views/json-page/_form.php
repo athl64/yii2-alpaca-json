@@ -21,7 +21,7 @@ $tabs = [];
             <?php $isCurrent = $language == $model->lang; ?>
             <?php $languageLabel = $isCurrent ? "[$language]" : $language; ?>
             <?php $btnClass = $isCurrent ? 'btn btn-default active' : 'btn btn-default' ?>
-            <?= \yii\helpers\Html::a($languageLabel, \yii\helpers\Url::current(['lang' => $language]), ['class' => $btnClass]) ?>&nbsp;
+            <?= \yii\helpers\Html::a($languageLabel, \yii\helpers\Url::current(['lang' => $language]), ['class' => $btnClass . ' alpaca-lang-tab']) ?>&nbsp;
             <?php endforeach; ?>
         </div>
         <?php endif; ?>

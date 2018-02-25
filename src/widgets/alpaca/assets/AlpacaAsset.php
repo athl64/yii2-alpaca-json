@@ -19,6 +19,7 @@ class AlpacaAsset extends AssetBundle
     public $js = [
         'js/handlebars.min.js',
         'js/alpaca.min.js',
+        'js/yii2-alpaca.js',
     ];
 
     public $depends = [

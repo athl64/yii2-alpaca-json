@@ -60,6 +60,14 @@ class AlpacaWidget extends InputWidget
     public $options;
 
     /**
+     * Selector of a language changing anker.
+     * Used to show alert when changing language withous saving form.
+     * If false or null - do not show alert.
+     * @var string
+     */
+    public $languageTabSelector = '.alpaca-lang-tab';
+
+    /**
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
@@ -121,11 +129,13 @@ class AlpacaWidget extends InputWidget
         }
         $postRenderCallback = '';
         $inputId = $this->getInputId();
+        $fieldId = $this->getAlpacaTagId();
         $alpacaOptions['data'] = $this->model->{$this->attribute};
         $alpacaOptions['postRender'] = 'function(control) {
             control.on("change", function(e) {
                 var val = JSON.stringify(this.getValue());
                 $(\'#' . $inputId . '\').val(val);
+                triggerAlpacaFormChange("' . $fieldId . '");
             });
         }';
         if (!empty($alpacaOptions['postRender'])) {
@@ -135,8 +145,10 @@ class AlpacaWidget extends InputWidget
         $jsonData = Json::encode($alpacaOptions);
         $jsonData = str_replace('"' . self::CDATA_POST_RENDER_PART . '"', $postRenderCallback, $jsonData);
         $jsonData = $this->replaceJsCodeSnippets($jsonData);
-        $fieldId = $this->getAlpacaTagId();
-        $script = "$('#$fieldId').alpaca($jsonData);";
+        $script = "$('#$fieldId').alpaca($jsonData);\n";
+        if ($this->languageTabSelector) {
+            $script .= "checkAlpacaLanguageTabs('" . $this->languageTabSelector . "', '" . $fieldId . "');";
+        }
 
         return $script;
     }
@@ -179,18 +191,7 @@ class AlpacaWidget extends InputWidget
                     'melonfilefield_browse' => Yii::t('app', 'Browse file'),
                     'melonfile_browser_url' => $fileWidget->getManagerOptions()['url'],
                 ];
-                $jsCode = 'function() {
-                    var $input = $(this.control);
-                    var $container = $input.parent();
-                    if ($container.find(\'[data-browse]\').length == 0) {
-                        var inputId = $input.attr("id");
-                        var browseId = inputId + "_browse_btn";
-                        var browseText = $input.data(\'melonfilefield_browse\');
-                        var managerUrl = $input.data("melonfile_browser_url");
-                        $container.append(\'<button class="btn btn-default btn-sm" type="button" id="\' + browseId + \'" data-browse>\' + browseText + \'</button>\');
-                        mihaildev.elFinder.register(inputId, function(file, id){ $(\'#\' + id).val(file.url).trigger(\'change\', [file, id]); return true;}); $(document).on(\'click\', \'#\' + browseId, function(){mihaildev.elFinder.openManager({"id": inputId, "url": managerUrl + "&callback=" + inputId, "width": \'auto\', "height": \'auto\'});});
-                    }
-                }';
+                $jsCode = 'processAlpacaOptions';
                 $result['events'] = [
                     'ready' => $this->getCdataIdentifier($jsCode),
                 ];
