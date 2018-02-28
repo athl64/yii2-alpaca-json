@@ -68,6 +68,23 @@ class AlpacaWidget extends InputWidget
     public $languageTabSelector = '.alpaca-lang-tab';
 
     /**
+     * @var string
+     */
+    public $languageChangeNoticeMessage;
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+
+        if (!isset($this->languageChangeNoticeMessage)) {
+            $this->languageChangeNoticeMessage = Yii::t('app', 'Do you really want leave page? All unsaved changes will be loosed.');
+        }
+    }
+
+    /**
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
@@ -134,8 +151,9 @@ class AlpacaWidget extends InputWidget
         $alpacaOptions['postRender'] = 'function(control) {
             control.on("change", function(e) {
                 var val = JSON.stringify(this.getValue());
-                $(\'#' . $inputId . '\').val(val);
-                triggerAlpacaFormChange("' . $fieldId . '");
+                $(\'#' . $inputId . '\').val(val); // write to html form input widget JSON data 
+                dvixiAlpacaWidget.triggerAlpacaFormChange("' . $fieldId . '");
+                dvixiAlpacaWidget.handleFileRemoveButton($(e.target));
             });
         }';
         if (!empty($alpacaOptions['postRender'])) {
@@ -147,7 +165,10 @@ class AlpacaWidget extends InputWidget
         $jsonData = $this->replaceJsCodeSnippets($jsonData);
         $script = "$('#$fieldId').alpaca($jsonData);\n";
         if ($this->languageTabSelector) {
-            $script .= "checkAlpacaLanguageTabs('" . $this->languageTabSelector . "', '" . $fieldId . "');";
+            $script .= "dvixiAlpacaWidget.checkAlpacaLanguageTabs('"
+                . $this->languageTabSelector . "', '"
+                . $fieldId . "', '"
+                . $this->languageChangeNoticeMessage . "');";
         }
 
         return $script;
@@ -191,7 +212,7 @@ class AlpacaWidget extends InputWidget
                     'melonfilefield_browse' => Yii::t('app', 'Browse file'),
                     'melonfile_browser_url' => $fileWidget->getManagerOptions()['url'],
                 ];
-                $jsCode = 'processAlpacaOptions';
+                $jsCode = 'dvixiAlpacaWidget.processAlpacaOptions';
                 $result['events'] = [
                     'ready' => $this->getCdataIdentifier($jsCode),
                 ];

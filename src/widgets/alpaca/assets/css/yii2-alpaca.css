@@ -1,0 +1,19 @@
+.alpaca-file-field-container {
+    width: 100%;
+}
+.alpaca-file-field-container input[data-melonfilefield_browse] {
+    display: inline-block;
+    width: 40%;
+}
+.alpaca-file-field-container button {
+    display: inline-block;
+}
+.alpaca-file-field-container .file-preview-block {
+    display: inline-block;
+    width: 40%;
+    max-height: 100px;
+    text-align: center;
+}
+.alpaca-file-field-container .file-preview-block img {
+    max-height: 100px;
+}

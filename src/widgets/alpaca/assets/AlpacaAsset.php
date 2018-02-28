@@ -15,6 +15,7 @@ class AlpacaAsset extends AssetBundle
     public $sourcePath = '@dvixi/alpaca/widgets/alpaca/assets';
     public $css = [
         'css/alpaca.min.css',
+        'css/yii2-alpaca.css'
     ];
     public $js = [
         'js/handlebars.min.js',
