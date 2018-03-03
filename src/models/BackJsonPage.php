@@ -70,7 +70,7 @@ abstract class BackJsonPage extends JsonPage
     {
         return [
             'timestamp' => [
-                'class' => \yii\behaviors\TimestampBehavior::className(),
+                'class' => \yii\behaviors\TimestampBehavior::class,
             ],
         ];
     }

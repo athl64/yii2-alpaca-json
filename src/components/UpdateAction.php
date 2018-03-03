@@ -2,32 +2,30 @@
 /**
  * Created by PhpStorm.
  * User: maxim
- * Date: 06.02.18
- * Time: 14:49
+ * Date: 03.03.18
+ * Time: 14:27
  */
 
-namespace dvixi\alpaca\controllers;
+namespace dvixi\alpaca\components;
 
-
+use yii\base\Action;
 use dvixi\alpaca\helpers\JsonPageModuleHelper;
-use dvixi\alpaca\models\JsonPage;
 use yii\web\Controller;
 use Yii;
 
-abstract class JsonPageController extends Controller
+class UpdateAction extends Action
 {
     /**
-     * @return JsonPage|string
+     * @param null|string $lang
+     * @return mixed
      */
-    abstract function getClassName();
-
-    public function actionUpdate($lang = null)
+    public function run($lang = null)
     {
         $lang = empty($lang)
             ? JsonPageModuleHelper::m()->defaultLanguage
             : $lang;
 
-        $class = $this->getClassName();
+        $class = $this->controller->getModelClass();
         $model = $class::getRecord($lang);
 
         if (!$model) {
@@ -37,10 +35,11 @@ abstract class JsonPageController extends Controller
 
         if (Yii::$app->request->isPost) {
             $model->load(Yii::$app->request->post());
+            // todo: add validation displaying for extremal cases
             $model->save();
         }
 
-        return $this->render('@dvixi/alpaca/views/json-page/_form', [
+        return $this->controller->render('@dvixi/alpaca/views/json-page/_form', [
             'model' => $model,
         ]);
     }

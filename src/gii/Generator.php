@@ -18,6 +18,7 @@ class Generator extends \yii\gii\Generator
     public $class;
     public $backModuleNamespace = 'backend\modules\moduleName';
     public $frontModuleNamespace = 'frontend\modules\moduleName';
+    public $controllerBaseClass = 'backend\components\BackendController';
     public $jsonObjects;
 
     /**
@@ -105,7 +106,6 @@ class Generator extends \yii\gii\Generator
         $frontModelNamespace = $this->frontModuleNamespace . '\\models';
         $modelClassName = $backModelNamespace . '\\' . $this->class;
         $controllerClass = $this->class . 'Controller';
-        $jsonPageBaseControllerClassName = 'dvixi\alpaca\controllers\JsonPageController';
         $jsonBackBaseModelClassName = 'dvixi\alpaca\models\BackJsonPage';
         $jsonFrontBaseModelClassName = 'dvixi\alpaca\models\FrontJsonPage';
         $moduleName = $this->getBackModuleName();
@@ -132,7 +132,7 @@ class Generator extends \yii\gii\Generator
                 'modelClassName' => $modelClassName,
                 'modelClass' => $this->class,
                 'controllerClass' => $controllerClass,
-                'jsonPageBaseControllerClassName' => $jsonPageBaseControllerClassName,
+                'controllerBaseClass' => $this->controllerBaseClass
             ])
         );
 

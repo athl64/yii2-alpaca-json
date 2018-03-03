@@ -20,9 +20,9 @@ echo \yii\helpers\Html::tag('hr');
 
 echo $form->field($generator, 'class')->hint('examples: HomePage, Footer, JeronimoPage');
 echo $form->field($generator, 'backModuleNamespace')->hint('examples: backend\modules\homePage');
-echo $form->field($generator, 'frontModuleNamespace')->hint('examples: HomePage, Footer, JeronimoPage');
-//echo $form->field($generator, 'schema')->textarea();
-echo $form->field($generator, 'jsonObjects')->widget(MultipleInput::className(), [
+echo $form->field($generator, 'frontModuleNamespace')->hint('examples: frontend\modules\homePage');
+echo $form->field($generator, 'controllerBaseClass')->hint('examples: yii\web\Controller');
+echo $form->field($generator, 'jsonObjects')->widget(MultipleInput::class, [
     'min' => 1,
     'addButtonPosition' => MultipleInput::POS_HEADER,
     'columns' => [
