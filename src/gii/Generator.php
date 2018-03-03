@@ -15,8 +15,9 @@ class Generator extends \yii\gii\Generator
 {
     const DEFAULT_JSON_ATTR = 'pageSeo';
 
-    public $moduleNamespace = 'dvixi\alpaca';
     public $class;
+    public $backModuleNamespace = 'backend\modules\moduleName';
+    public $frontModuleNamespace = 'frontend\modules\moduleName';
     public $jsonObjects;
 
     /**
@@ -35,8 +36,8 @@ class Generator extends \yii\gii\Generator
     public function rules()
     {
         return [
-            [['moduleNamespace', 'class'], 'required'],
-            [['moduleNamespace', 'class'], 'string'],
+            [['backModuleNamespace', 'frontModuleNamespace', 'class'], 'required'],
+            [['backModuleNamespace', 'frontModuleNamespace', 'class'], 'string'],
             [['jsonObjects'], 'safe'],
         ];
     }
@@ -92,27 +93,30 @@ class Generator extends \yii\gii\Generator
         $jsonFieldOptionsString = $this->convertJsonOptionsArrayToString($jsonFieldOptions);
 
         // used for generating template files, UNIX system paths
-        $modulePath = $this->getModulePath();
-        $modelPath = $modulePath . '/models/' . $this->class . '.php';
-        $controllerPath = $modulePath . '/controllers/' . $this->class . 'Controller.php';
-        $jsonDefaultDataPath = $modulePath . '/models/json/' . $this->class;
+        $backModulePath = $this->getBackModulePath();
+        $backModelPath = $backModulePath . '/models/' . $this->class . '.php';
+        $frontModelPath = $this->getFrontModulePath() . '/models/' . $this->class . '.php';
+        $controllerPath = $backModulePath . '/controllers/' . $this->class . 'Controller.php';
+        $jsonDefaultDataPath = $backModulePath . '/models/json/' . $this->class;
 
         // used inside templates - PHP namespaces or etc
-        $controllerNamespace = $this->moduleNamespace . '\\controllers';
-        $modelNamespace = $this->moduleNamespace . '\\models';
-        $modelClassName = $modelNamespace . '\\' . $this->class;
+        $controllerNamespace = $this->backModuleNamespace . '\\controllers';
+        $backModelNamespace = $this->backModuleNamespace . '\\models';
+        $frontModelNamespace = $this->frontModuleNamespace . '\\models';
+        $modelClassName = $backModelNamespace . '\\' . $this->class;
         $controllerClass = $this->class . 'Controller';
-        $jsonPageBaseControllerClassName = 'dvixi\alpaca\controllers\JsonPageController'; //todo: !!! replace with Yii::getAlias after module publishing
-        $jsonBaseModelClassName = 'dvixi\alpaca\models\JsonPage';//todo: !!! replace with Yii::getAlias after module publishing
-        $moduleName = $this->getModuleName();
+        $jsonPageBaseControllerClassName = 'dvixi\alpaca\controllers\JsonPageController';
+        $jsonBackBaseModelClassName = 'dvixi\alpaca\models\BackJsonPage';
+        $jsonFrontBaseModelClassName = 'dvixi\alpaca\models\FrontJsonPage';
+        $moduleName = $this->getBackModuleName();
 
-        // Model file
+        // backend model file
         $files[] = new \yii\gii\CodeFile(
-            $modelPath,
-            $this->render('../templates/model.php', [
-                'jsonBaseModelClassName' => $jsonBaseModelClassName,
+            $backModelPath,
+            $this->render('../templates/backModel.php', [
+                'jsonBaseModelClassName' => $jsonBackBaseModelClassName,
                 'class' => $this->class,
-                'namespace' => $modelNamespace,
+                'namespace' => $backModelNamespace,
                 'jsonFieldConfigString' => $jsonFieldConfigString,
                 'jsonFieldOptionsString' => $jsonFieldOptionsString,
                 'attributes' => $attributes,
@@ -142,6 +146,17 @@ class Generator extends \yii\gii\Generator
                 ])
             );
         }
+
+        // frontend model file
+        $files[] = new \yii\gii\CodeFile(
+            $frontModelPath,
+            $this->render('../templates/frontModel.php', [
+                'attributes' => $attributes,
+                'namespace' => $frontModelNamespace,
+                'class' => $this->class,
+                'jsonBaseModelClassName' => $jsonFrontBaseModelClassName
+            ])
+        );
 
         return $files;
     }
@@ -192,7 +207,7 @@ class Generator extends \yii\gii\Generator
                 }
             } else {
                 if ($parentName != 'properties' && !empty($parentName) && !array_key_exists('title', $array)) {
-                    $titleTranslate = "Yii::t('back/$this->class-" . $this->getModuleName() . "-$attribute', '$parentName')";
+                    $titleTranslate = "Yii::t('back/$this->class-" . $this->getBackModuleName() . "-$attribute', '$parentName')";
                     $result .= "$whitespaces    'title' => $titleTranslate,\n";
                     $result .= "$whitespaces    'required' => true,\n";
                 }
@@ -294,17 +309,25 @@ class Generator extends \yii\gii\Generator
     /**
      * @return bool|string
      */
-    protected function getModulePath()
+    protected function getBackModulePath()
     {
-        return Yii::getAlias('@' . str_replace('\\', '/', $this->moduleNamespace));
+        return Yii::getAlias('@' . str_replace('\\', '/', $this->backModuleNamespace));
+    }
+
+    /**
+     * @return bool|string
+     */
+    protected function getFrontModulePath()
+    {
+        return Yii::getAlias('@' . str_replace('\\', '/', $this->frontModuleNamespace));
     }
 
     /**
      * @return string
      */
-    protected function getModuleName()
+    protected function getBackModuleName()
     {
-        $modulePath = $this->getModulePath();
+        $modulePath = $this->getBackModulePath();
 
         return basename($modulePath);
     }

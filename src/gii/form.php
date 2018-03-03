@@ -18,8 +18,9 @@ echo \yii\helpers\Html::tag('hr');
 echo \yii\helpers\Html::a('AlpacaJs documentation', 'http://www.alpacajs.org/documentation.html', ['target' =>'_blank']);
 echo \yii\helpers\Html::tag('hr');
 
-echo $form->field($generator, 'moduleNamespace')->hint('examples: backend\modules\homePage');
 echo $form->field($generator, 'class')->hint('examples: HomePage, Footer, JeronimoPage');
+echo $form->field($generator, 'backModuleNamespace')->hint('examples: backend\modules\homePage');
+echo $form->field($generator, 'frontModuleNamespace')->hint('examples: HomePage, Footer, JeronimoPage');
 //echo $form->field($generator, 'schema')->textarea();
 echo $form->field($generator, 'jsonObjects')->widget(MultipleInput::className(), [
     'min' => 1,
