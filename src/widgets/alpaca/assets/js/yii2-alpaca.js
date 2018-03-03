@@ -26,14 +26,16 @@ var dvixiAlpacaWidget = {
         var $container = $input.parent();
         var deleteId = $input.attr('id') + '_delete_btn';
         if ($input.val() != '' && $input.val() != null && $input.val() != undefined) {
-            /* if file selected - apppend remove btn */
-            $('<button class="btn btn-danger btn-sm" type="button" id="' + deleteId + '">X</button>').insertAfter($container.find('button'));
-            /* clear file field event handler */
-            $(document).on('click', '#' + deleteId, function(e) {
-                $input.val('');
-                dvixiAlpacaWidget.changeFilePreview({url: $input.val(), name:$input.val()}, $container);
-                $container.find('.btn-danger').remove();
-            });
+            if ($container.find('#' + deleteId).length == 0) {
+                /* if file selected - apppend remove btn */
+                $('<button class="btn btn-danger btn-sm" type="button" id="' + deleteId + '">X</button>').insertAfter($container.find('button'));
+                /* clear file field event handler */
+                $(document).on('click', '#' + deleteId, function(e) {
+                    $input.val('');
+                    dvixiAlpacaWidget.changeFilePreview({url: $input.val(), name:$input.val()}, $container);
+                    $container.find('.btn-danger').remove();
+                });
+            }
         } else {
             $container.find('.btn-danger').remove();
         }
