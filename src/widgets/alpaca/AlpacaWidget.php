@@ -99,7 +99,12 @@ class AlpacaWidget extends InputWidget
 
         $options = ArrayHelper::merge($this->options, ['id' => $this->getInputId()]);
         $field = Html::activeInput('hidden', $this->model, $this->attribute, $options);
-        $alpacaTag = Html::tag('div', $field, ['id' => $this->getAlpacaTagId()]);
+        $alpacaTag = Html::tag('div', $field, [
+            'id' => $this->getAlpacaTagId(),
+            'data' => [
+                'input_id' => $this->getInputId(),
+            ]
+        ]);
 
         return $alpacaTag;
     }
@@ -155,6 +160,8 @@ class AlpacaWidget extends InputWidget
                 dvixiAlpacaWidget.triggerAlpacaFormChange("' . $fieldId . '");
                 dvixiAlpacaWidget.handleFileRemoveButton($(e.target));
             });
+            /* need for tracking add\remove\move events on fields */
+            dvixiAlpacaWidget.parseItemsForEvents(control);
         }';
         if (!empty($alpacaOptions['postRender'])) {
             $postRenderCallback = $alpacaOptions['postRender'];

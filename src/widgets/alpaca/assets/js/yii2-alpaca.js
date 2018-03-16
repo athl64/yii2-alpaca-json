@@ -87,5 +87,57 @@ var dvixiAlpacaWidget = {
      */
     isImage: function(url) {
         return(url.match(/\.(jpeg|jpg|gif|png|bmp)$/) != null);
+    },
+    parseItemsForEvents: function(item) {
+        /* todo: refactor this place */
+        item.on("add", function() {
+            var rootItem = dvixiAlpacaWidget.parseParentsUntilRoot(item);
+            var val = JSON.stringify(rootItem.getValue());
+            var inputId = false;
+            if (rootItem.domEl.data('input_id') != undefined) {
+                inputId = rootItem.domEl.data('input_id');
+            }
+            var alpacaTagId = rootItem.domEl.attr('id');
+            $('#' + inputId).val(val);
+            dvixiAlpacaWidget.triggerAlpacaFormChange(alpacaTagId);
+        });
+
+        item.on("remove", function() {
+            var rootItem = dvixiAlpacaWidget.parseParentsUntilRoot(item);
+            var val = JSON.stringify(rootItem.getValue());
+            var inputId = false;
+            if (rootItem.domEl.data('input_id') != undefined) {
+                inputId = rootItem.domEl.data('input_id');
+            }
+            var alpacaTagId = rootItem.domEl.attr('id');
+            $('#' + inputId).val(val);
+            dvixiAlpacaWidget.triggerAlpacaFormChange(alpacaTagId);
+        });
+
+        item.on("move", function() {
+            var rootItem = dvixiAlpacaWidget.parseParentsUntilRoot(item);
+            var val = JSON.stringify(rootItem.getValue());
+            var inputId = false;
+            if (rootItem.domEl.data('input_id') != undefined) {
+                inputId = rootItem.domEl.data('input_id');
+            }
+            var alpacaTagId = rootItem.domEl.attr('id');
+            $('#' + inputId).val(val);
+            dvixiAlpacaWidget.triggerAlpacaFormChange(alpacaTagId);
+        });
+
+        if (item.childrenById != 'undefined') {
+            for (var property in item.childrenById) {
+                if (item.childrenById.hasOwnProperty(property)) {
+                    dvixiAlpacaWidget.parseItemsForEvents(item.childrenById[property]);
+                }
+            }
+        }
+    },
+    parseParentsUntilRoot: function(item) {
+        if (item.hasOwnProperty('parent') && item.parent != null) {
+            item = dvixiAlpacaWidget.parseParentsUntilRoot(item.parent);
+        }
+        return item;
     }
 };
