@@ -33,7 +33,7 @@ $tabs = [];
     <?php foreach($model->getJsonAttributes() as $attribute) : ?>
     <?php $jsonOptions = empty($model->getJsonOptions()[$attribute]) ? [] : $model->getJsonOptions()[$attribute]; ?>
     <?php $tabs[] = [
-            'label' => $attribute,
+            'label' => $model->getAttributeLabel($attribute),
             'content' => \dvixi\alpaca\widgets\alpaca\AlpacaWidget::widget([
                 'model' => $model,
                 'attribute' => $attribute,
