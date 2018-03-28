@@ -39,7 +39,9 @@ class UpdateAction extends Action
             $model->save();
         }
 
-        return $this->controller->render('@dvixi/alpaca/views/json-page/_form', [
+        $viewPath = JsonPageModuleHelper::m()->viewPath;
+
+        return $this->controller->render( $viewPath . '/json-page/_form', [
             'model' => $model,
         ]);
     }

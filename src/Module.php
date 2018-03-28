@@ -22,6 +22,11 @@ class Module extends \yii\base\Module
      * @var string
      */
     public $elFinderControllerPath = 'elfinder';
+    /**
+     * Path for form editing view file, default points to module view file
+     * @var string
+     */
+    private $_viewPath = '@dvixi/alpaca/views';
 
     /**
      * @inheritdoc
@@ -39,5 +44,24 @@ class Module extends \yii\base\Module
         if (!in_array($this->defaultLanguage, $this->languages)) {
             throw new InvalidConfigException('Default language does not listed in $languages!');
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getViewPath()
+    {
+        if ($this->_viewPath === null) {
+            $this->_viewPath = $this->getBasePath() . DIRECTORY_SEPARATOR . 'views';
+        }
+        return $this->_viewPath;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setViewPath($path)
+    {
+        $this->_viewPath = Yii::getAlias($path);
     }
 }

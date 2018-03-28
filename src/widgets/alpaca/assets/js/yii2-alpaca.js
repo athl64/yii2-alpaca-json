@@ -139,5 +139,24 @@ var dvixiAlpacaWidget = {
             item = dvixiAlpacaWidget.parseParentsUntilRoot(item.parent);
         }
         return item;
+    },
+    checkFormsForValidity: function() {
+        var result = true;
+        for (var propertyName in $.alpaca.fieldInstances) {
+            result &= $.alpaca.fieldInstances[propertyName].validate();
+        };
+        return result;
     }
 };
+
+(function () {
+    /* check forms validity before submit */
+    $(document).on('click', '[data-alpaca_submit]', function(e) {
+        var isValid = dvixiAlpacaWidget.checkFormsForValidity();
+        var message = $(e.target).data('check_message');
+        if (!isValid) {
+            e.preventDefault();
+            alert(message);
+        }
+    });
+})();
